@@ -1,0 +1,3 @@
+venv
+# Ignorar archivos .DS_Store en macOS
+.DS_Store

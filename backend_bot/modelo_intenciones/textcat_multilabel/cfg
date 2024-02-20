@@ -1,0 +1,12 @@
+{
+  "labels":[
+    "saludo",
+    "despedida",
+    "agradecimiento",
+    "recomendacion",
+    "actores",
+    "fecha_lanzamiento",
+    "plot"
+  ],
+  "threshold":0.5
+}
