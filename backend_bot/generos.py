@@ -6,12 +6,13 @@ generos_es = [
     "legal", "acción en vivo", "artes marciales", "musical", "misterio",
     "noir", "rendimiento", "política", "romance", "sátira",
     "ciencia ficción", "corto", "slasher", "deportes", "espía",
-    "superhéroe", "sobrenatural", "adolescente", "suspenso", "guerra", "oeste"
+    "superhéroe", "sobrenatural", "adolescente", "suspenso", "guerra", "oeste","amor"
 ]
 
 
 # Diccionario de traducciones de géneros a minúsculas
 traducciones_generos = {
+    "amor": "romance",
     "acción": "action",
     "aventura": "adventure",
     "animada": "animated",

@@ -104,9 +104,10 @@ def ejecutarResponse(texto, user):
             url = pelicula['url']
             response.append(url)
         if response:
+            response.insert(0,"Encontre estos resultados que pueden adecuarse a tu solicitud...")
             return response
         else:
-            return ["No encontre nada xd"]
+            return ["No encontre nada que se acomode a tu solicitud"]
     elif intencion == 'agradecimiento':
         mensaje = generar_mensaje(user, "despedida")
         return mensaje
