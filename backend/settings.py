@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'salas_cines_db',
+        'NAME':'salas_cine_db',
         'USER':'postgres',
         'PASSWORD':'postgres',
         'HOST':'127.0.0.1',
