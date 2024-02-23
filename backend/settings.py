@@ -54,7 +54,7 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://localhost:5432'
+    'http://salas-cines-database-konaja.postgres.database.azure.com'
 ]
 ROOT_URLCONF = 'backend.urls'
 
@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'salas_cine_db',
-        'USER':'postgres',
-        'PASSWORD':'postgres',
-        'HOST':'127.0.0.1',
+        'NAME':'postgres',
+        'USER':'admin_database',
+        'PASSWORD':'konaja04@',
+        'HOST':'salas-cines-database-konaja.postgres.database.azure.com',
         'PORT':'5432'
     }
 }
