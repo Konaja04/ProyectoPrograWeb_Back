@@ -39,6 +39,8 @@ class SalaAdmin(admin.ModelAdmin):
 
 class SalaFormatoAdmin(admin.ModelAdmin):
     list_display = ['sala', 'formato']
+class PeliculaUsuarioAdmin(admin.ModelAdmin):
+    list_display = ['pelicula', 'usuario']
 
 class FuncionAdmin(admin.ModelAdmin):
     list_display = ['pelicula', 'sala', 'ventana']
@@ -74,3 +76,4 @@ admin.site.register(Reserva, ReservaAdmin)
 admin.site.register(Usuario_Keyword, UsuarioKeywordAdmin)
 admin.site.register(Usuario_Actor, UsuarioActorAdmin)
 admin.site.register(Usuario_Genero, UsuarioGeneroAdmin)
+admin.site.register(Pelicula_Usuario, PeliculaUsuarioAdmin)

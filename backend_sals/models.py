@@ -33,11 +33,8 @@ class Pelicula(models.Model):
     thumbnail_width = models.IntegerField()
     thumbnail_height = models.IntegerField()
     path = models.CharField(max_length=300, default = "the-grudge")
-
     def __str__(self):
         return self.title
-
-
 
 
 class Ciudad(models.Model):
@@ -94,7 +91,6 @@ class Reserva(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     funcion = models.ForeignKey(Funcion, on_delete=models.CASCADE)
     asientos = models.CharField(max_length=100)
-
 
 class Usuario_Keyword(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
