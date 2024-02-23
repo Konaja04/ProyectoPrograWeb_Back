@@ -108,4 +108,8 @@ class Usuario_Genero(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     genero = models.ForeignKey(Genero, on_delete = models.CASCADE)
     peso = models.FloatField()
+class Pelicula_Usuario(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    pelicula = models.ForeignKey(Pelicula, on_delete = models.CASCADE)
+    calificacion = models.FloatField()
 

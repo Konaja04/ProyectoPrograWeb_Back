@@ -1,0 +1,432 @@
+[
+  {
+    "movie": "Private Property",
+    "sala": "CP Alcazar",
+    "window_id": 77
+  },
+  {
+    "movie": "The Hunt",
+    "sala": "CP Brasil",
+    "window_id": 34
+  },
+  {
+    "movie": "The Good House",
+    "sala": "CP Brasil",
+    "window_id": 75
+  },
+  {
+    "movie": "Mr. Harrigan's Phone",
+    "sala": "CP Centro",
+    "window_id": 6
+  },
+  {
+    "movie": "Uncharted",
+    "sala": "CP Centro",
+    "window_id": 41
+  },
+  {
+    "movie": "Lost Girls & Love Hotels",
+    "sala": "CP Centro",
+    "window_id": 72
+  },
+  {
+    "movie": "Cheaper by the Dozen",
+    "sala": "CP Centro",
+    "window_id": 128
+  },
+  {
+    "movie": "Werewolves Within",
+    "sala": "CP Centro Civico",
+    "window_id": 104
+  },
+  {
+    "movie": "Sweetwater",
+    "sala": "CP Centro Civico",
+    "window_id": 133
+  },
+  {
+    "movie": "Everybody's Talking About Jamie",
+    "sala": "CP Chiclayo",
+    "window_id": 64
+  },
+  {
+    "movie": "The Velvet Underground",
+    "sala": "CP Chiclayo",
+    "window_id": 86
+  },
+  {
+    "movie": "The Woman in the Window",
+    "sala": "CP Comas",
+    "window_id": 24
+  },
+  {
+    "movie": "Acidman",
+    "sala": "CP Comas",
+    "window_id": 33
+  },
+  {
+    "movie": "Clean",
+    "sala": "CP Comas",
+    "window_id": 54
+  },
+  {
+    "movie": "Mother/Android",
+    "sala": "CP Comas",
+    "window_id": 124
+  },
+  {
+    "movie": "I Care a Lot",
+    "sala": "CP Comas",
+    "window_id": 134
+  },
+  {
+    "movie": "Babylon",
+    "sala": "CP Guardia Civil",
+    "window_id": 38
+  },
+  {
+    "movie": "The Secret: Dare To Dream",
+    "sala": "CP Guardia Civil",
+    "window_id": 42
+  },
+  {
+    "movie": "Half Brothers",
+    "sala": "CP Guardia Civil",
+    "window_id": 134
+  },
+  {
+    "movie": "Running the Bases",
+    "sala": "CP Juliaca",
+    "window_id": 17
+  },
+  {
+    "movie": "Smile",
+    "sala": "CP Juliaca",
+    "window_id": 59
+  },
+  {
+    "movie": "Jingle Jangle: A Christmas Journey",
+    "sala": "CP Juliaca",
+    "window_id": 59
+  },
+  {
+    "movie": "Beau Is Afraid",
+    "sala": "CP La Molina",
+    "window_id": 101
+  },
+  {
+    "movie": "Needle in a Timestack",
+    "sala": "CP La Molina",
+    "window_id": 135
+  },
+  {
+    "movie": "Long Weekend",
+    "sala": "CP Lurin",
+    "window_id": 10
+  },
+  {
+    "movie": "Show Me the Father",
+    "sala": "CP Lurin",
+    "window_id": 13
+  },
+  {
+    "movie": "Rescued by Ruby",
+    "sala": "CP Lurin",
+    "window_id": 104
+  },
+  {
+    "movie": "Bones and All",
+    "sala": "CP Lurin",
+    "window_id": 122
+  },
+  {
+    "movie": "Run",
+    "sala": "CP Lurin",
+    "window_id": 140
+  },
+  {
+    "movie": "Strange World",
+    "sala": "CP Mall del Sur",
+    "window_id": 146
+  },
+  {
+    "movie": "How It Ends",
+    "sala": "CP Norte",
+    "window_id": 126
+  },
+  {
+    "movie": "A Crime on the Bayou",
+    "sala": "CP Norte",
+    "window_id": 139
+  },
+  {
+    "movie": "Senior Year",
+    "sala": "CP Norte",
+    "window_id": 143
+  },
+  {
+    "movie": "Rogue",
+    "sala": "CP Piura",
+    "window_id": 64
+  },
+  {
+    "movie": "Billie Eilish: The World's a Little Blurry",
+    "sala": "CP Primavera",
+    "window_id": 35
+  },
+  {
+    "movie": "Bitch Ass",
+    "sala": "CP Primavera",
+    "window_id": 65
+  },
+  {
+    "movie": "Hellraiser",
+    "sala": "CP Pro",
+    "window_id": 75
+  },
+  {
+    "movie": "Deadlock",
+    "sala": "CP Puno",
+    "window_id": 64
+  },
+  {
+    "movie": "Guest House",
+    "sala": "CP Risso",
+    "window_id": 33
+  },
+  {
+    "movie": "The White Tiger",
+    "sala": "CP Salaverry",
+    "window_id": 85
+  },
+  {
+    "movie": "Peter Rabbit 2: The Runaway",
+    "sala": "CP San Borja",
+    "window_id": 79
+  },
+  {
+    "movie": "DC League of Super-Pets",
+    "sala": "CP San Borja",
+    "window_id": 91
+  },
+  {
+    "movie": "Death of Me",
+    "sala": "CP San Borja",
+    "window_id": 121
+  },
+  {
+    "movie": "The Glorias",
+    "sala": "CP Trujillo Centro",
+    "window_id": 18
+  },
+  {
+    "movie": "Teen Wolf: The Movie",
+    "sala": "CP Trujillo Centro",
+    "window_id": 81
+  },
+  {
+    "movie": "Braking for Whales",
+    "sala": "CP Trujillo Centro",
+    "window_id": 115
+  },
+  {
+    "movie": "Deep Blue Sea 3",
+    "sala": "CP Trujillo Centro",
+    "window_id": 143
+  },
+  {
+    "movie": "Allegoria",
+    "sala": "CP Trujillo Real Plaza",
+    "window_id": 75
+  },
+  {
+    "movie": "Underwater",
+    "sala": "CP Trujillo Real Plaza",
+    "window_id": 113
+  },
+  {
+    "movie": "Resident Evil: Welcome to Raccoon City",
+    "sala": "CP Arequipa",
+    "window_id": 50
+  },
+  {
+    "movie": "Three Thousand Years of Longing",
+    "sala": "CP Cajamarca",
+    "window_id": 75
+  },
+  {
+    "movie": "The Addams Family 2",
+    "sala": "CP Cajamarca",
+    "window_id": 100
+  },
+  {
+    "movie": "The Tragedy of Macbeth",
+    "sala": "CP Cusco",
+    "window_id": 35
+  },
+  {
+    "movie": "Tom & Jerry",
+    "sala": "CP Cusco",
+    "window_id": 136
+  },
+  {
+    "movie": "Finding You",
+    "sala": "CP Cusco",
+    "window_id": 137
+  },
+  {
+    "movie": "The Unbearable Weight of Massive Talent",
+    "sala": "CP Huancayo Real Plaza",
+    "window_id": 21
+  },
+  {
+    "movie": "Beast",
+    "sala": "CP Huancayo Real Plaza",
+    "window_id": 130
+  },
+  {
+    "movie": "Knights of the Zodiac",
+    "sala": "CP Pucallpa",
+    "window_id": 19
+  },
+  {
+    "movie": "Die in a Gunfight",
+    "sala": "CP Pucallpa",
+    "window_id": 94
+  },
+  {
+    "movie": "South Park: Post Covid",
+    "sala": "CP Pucallpa",
+    "window_id": 109
+  },
+  {
+    "movie": "A Quiet Place Part II",
+    "sala": "CP Santa Clara",
+    "window_id": 16
+  },
+  {
+    "movie": "Fear Street Part Three: 1666",
+    "sala": "CP Santa Clara",
+    "window_id": 40
+  },
+  {
+    "movie": "Out of Death",
+    "sala": "CP Santa Clara",
+    "window_id": 76
+  },
+  {
+    "movie": "Dolittle",
+    "sala": "CP Santa Clara",
+    "window_id": 111
+  },
+  {
+    "movie": "Love Hard",
+    "sala": "CP Santa Clara",
+    "window_id": 112
+  },
+  {
+    "movie": "How to Blow Up a Pipeline",
+    "sala": "CP Tacna",
+    "window_id": 32
+  },
+  {
+    "movie": "The Legend of La Llorona",
+    "sala": "CP Ventanilla",
+    "window_id": 22
+  },
+  {
+    "movie": "The Eyes of Tammy Faye",
+    "sala": "CP Ventanilla",
+    "window_id": 83
+  },
+  {
+    "movie": "The Grudge",
+    "sala": "CP Ventanilla",
+    "window_id": 120
+  },
+  {
+    "movie": "Shazam! Fury of the Gods",
+    "sala": "CP Villa El Salvador",
+    "window_id": 8
+  },
+  {
+    "movie": "The White Tiger",
+    "sala": "CP Villa María del Triunfo",
+    "window_id": 89
+  },
+  {
+    "movie": "Blackbird",
+    "sala": "CP Caminos del Inca",
+    "window_id": 41
+  },
+  {
+    "movie": "Athlete A",
+    "sala": "CP Caminos del Inca",
+    "window_id": 115
+  },
+  {
+    "movie": "Homeroom",
+    "sala": "CP Caminos del Inca",
+    "window_id": 120
+  },
+  {
+    "movie": "Mass",
+    "sala": "CP Puruchuco",
+    "window_id": 17
+  },
+  {
+    "movie": "The Woman King",
+    "sala": "CP Puruchuco",
+    "window_id": 87
+  },
+  {
+    "movie": "The Broken Hearts Gallery",
+    "sala": "CP El Polo",
+    "window_id": 67
+  },
+  {
+    "movie": "Arlo the Alligator Boy",
+    "sala": "CP Canto Grande",
+    "window_id": 10
+  },
+  {
+    "movie": "Unseen",
+    "sala": "CP Canto Grande",
+    "window_id": 133
+  },
+  {
+    "movie": "Afterlife of the Party",
+    "sala": "CP Canto Grande",
+    "window_id": 146
+  },
+  {
+    "movie": "Freaky",
+    "sala": "CP Mall Aventura Chiclayo",
+    "window_id": 67
+  },
+  {
+    "movie": "A Fairy Tale After All",
+    "sala": "CP Plaza Santa Catalina",
+    "window_id": 2
+  },
+  {
+    "movie": "The Trial of the Chicago 7",
+    "sala": "CP Plaza Santa Catalina",
+    "window_id": 12
+  },
+  {
+    "movie": "Black Bear",
+    "sala": "CP Plaza Santa Catalina",
+    "window_id": 41
+  },
+  {
+    "movie": "The Menu",
+    "sala": "CP Plaza Santa Catalina",
+    "window_id": 73
+  },
+  {
+    "movie": "Mother/Android",
+    "sala": "CP Plaza Santa Catalina",
+    "window_id": 122
+  }
+]
