@@ -54,14 +54,7 @@ def verSalas(request):
     if request.method == 'GET':
         salas = Sala.objects.all()
         ciudades =  list(Genero.objects.all().values())
-        ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
-        funciones =  [
-            {
-                "sala_id": funcion['sala_id'],
-                "hora": [ ventana['hora'] for ventana in ventanas if ventana['id'] == funcion['ventana_id']][0]
-            } 
-            for funcion in list(Funcion.objects.all().values())
-        ]
+        funciones =  list(Funcion.objects.all().values())
         for sala in salas:
             ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
             funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
@@ -80,68 +73,4 @@ def verSalas(request):
 
     return HttpResponse(json.dumps(response))
 
-@csrf_exempt
-def loginPostJsonEndpoint(request):
-    if request.method == "POST":
-        data = request.body
-        userData = json.loads(data)
 
-        codigo = userData["codigo"]
-        password = userData["password"]
-
-        # Interactuamos con la bd mediante el modelo (Query)
-        listaUsuariosFiltrada = User.objects.filter(
-            codigo=codigo, password=password
-        )
-
-        if len(listaUsuariosFiltrada) > 0 :
-            usuario = listaUsuariosFiltrada[0]
-            respuesta = {
-                "msg" : "",
-                "names": usuario.names,
-                "last_names": usuario.last_names,
-                "mail": usuario.email,
-                "img": usuario.img
-            }
-            return HttpResponse(json.dumps(respuesta))
-        else :
-            respuesta = {
-                "msg" : "Error en el login"
-            }
-            return HttpResponse(json.dumps(respuesta))
-
-
-@csrf_exempt
-def enviarReserva(request):
-    if request.method == "POST":
-        data = request.body
-        msgData = json.loads(data)
-        print(msgData)
-        usuario = 'KONAHA'
-        asunto = 'Confirmacion de Reserva'
-        destinatarios = [msgData['correo']]
-        mensaje  = devolver_mensaje(msgData)
-
-        msg = MIMEMultipart('alternative')
-        msg['From'] = usuario
-        msg['To'] = ', '.join(destinatarios)
-        msg['Subject'] = asunto
-        msg.attach(MIMEText(mensaje, 'html'))
-
-        try: 
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                server.starttls()
-                server.login(USER_MAIL, PASSWORD)
-                server.sendmail(USER_MAIL, destinatarios, msg.as_string())
-                print('Correo enviado')
-                respuesta = {
-                   "msg" : "Error en el login"
-                }
-                return HttpResponse(json.dumps(respuesta))
-
-        except:
-            print("no envie nada xd")
-            respuesta = {
-                "msg" : "Error en el envio de correo"
-            }
-            return HttpResponse(json.dumps(respuesta))
