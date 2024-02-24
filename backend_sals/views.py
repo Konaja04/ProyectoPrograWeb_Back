@@ -62,7 +62,6 @@ def verSalas(request):
             } 
             for funcion in list(Funcion.objects.all().values())
         ]
-        print(funciones)
         for sala in salas:
             ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
             funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
@@ -191,7 +190,8 @@ def obtener_salas_disponibles(request, pelicula_id):
         salas_disponibles = [] 
         
         for sala in salas:
-                funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
+                funcionesDispo =[{"funcion_id": funcion['funcion_id'], "hora": funcion['hora']} for funcion in funciones if funcion['sala_id'] == sala.pk]
+                
                 if len(funcionesDispo) > 0 :
                         
                     data = {
@@ -202,11 +202,43 @@ def obtener_salas_disponibles(request, pelicula_id):
                         "description":sala.description,
                         "path":sala.path,
                         "img":sala.img,
-                        "available_times":funcionesDispo
+                        "available_times":funcionesDispo,
                     }
-
-                    print(funcionesDispo)
 
                     salas_disponibles.append(data)
 
     return HttpResponse(json.dumps(salas_disponibles))
+
+
+
+def funcion_reserva(request, funcion_id):
+    if request.method == 'GET':
+        
+        peliculas = list(Pelicula.objects.all().values())
+        salas = list(Sala.objects.all().values())
+        ventanas = list(Ventana.objects.all().values())
+
+        funcion =  [
+            {
+                "pelicula": [pelicula for pelicula in peliculas if pelicula["id"]== funcion["pelicula_id"]] [0],
+                "sala": [sala for sala in salas if sala["id"]== funcion["sala_id"]] [0],
+                "ventana": [ {"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M"),"fecha":ventana['date'].strftime('%Y-%m-%d')} for ventana in ventanas if ventana["id"] == funcion["ventana_id"]] [0],
+            } 
+
+            for funcion in list(Funcion.objects.filter(id=funcion_id).values())
+        ]
+
+        if len(funcion) > 0:
+            respuesta = {
+                "msg":"",
+                "data": funcion[0]
+            }
+            
+        else :
+            respuesta = {
+                "msg" : "No existe"
+            }
+        
+        return HttpResponse(json.dumps(respuesta))
+
+

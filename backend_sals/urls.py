@@ -8,5 +8,6 @@ urlpatterns = [
     path('enviar-correo', enviarReserva),
     path('ver-pelicula/<str:pelicula_slug>/', verPelicula),
     path('obtener-salas-disponibles/<int:pelicula_id>/', obtener_salas_disponibles),
+    path('verificar-funcion/<int:funcion_id>/', funcion_reserva),
 
 ]
