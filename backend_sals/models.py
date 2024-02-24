@@ -4,6 +4,7 @@ from django.contrib import admin
 class User(models.Model):
     names = models.CharField(max_length=200)
     last_names = models.CharField(max_length=200)
+    codigo = models.IntegerField()
     email = models.CharField(max_length=200, unique = True)
     password = models.CharField(max_length=200)
     img = models.CharField(max_length = 300, unique = True)

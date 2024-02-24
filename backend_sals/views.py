@@ -6,8 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import *
 from datetime import datetime
-
-   
+  
 def llenarActoresPeliculas(request):
     data_peliculas  = 'backend_sals/datos.json'
     with open (data_peliculas, "r") as peliculas:
@@ -64,6 +63,7 @@ def verPeliculas(request):
             response.append(data)
 
     return HttpResponse(json.dumps(response))
+
 def verSalas(request):
     response = []
     if request.method == 'GET':
@@ -95,5 +95,34 @@ def verSalas(request):
             response.append(data)
 
     return HttpResponse(json.dumps(response))
+
+@csrf_exempt
+def loginPostJsonEndpoint(request):
+    if request.method == "POST":
+        data = request.body
+        userData = json.loads(data)
+
+        codigo = userData["codigo"]
+        password = userData["password"]
+
+        # Interactuamos con la bd mediante el modelo (Query)
+        listaUsuariosFiltrada = User.objects.filter(
+            codigo=codigo, password=password
+        )
+
+        if len(listaUsuariosFiltrada) > 0 :
+            usuario = listaUsuariosFiltrada[0]
+            respuesta = {
+                "msg" : "",
+                "names": usuario.names,
+                "last_names": usuario.last_names,
+                "img": usuario.img
+            }
+            return HttpResponse(json.dumps(respuesta))
+        else :
+            respuesta = {
+                "msg" : "Error en el login"
+            }
+            return HttpResponse(json.dumps(respuesta))
 
 
