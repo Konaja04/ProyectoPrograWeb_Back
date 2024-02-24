@@ -87,3 +87,27 @@ def verSalas(request):
     return HttpResponse(json.dumps(response))
 
 
+def verPelicula(request, pelicula_slug):
+
+    if request.method == 'GET':
+        pelicula = Pelicula.objects.get(path=pelicula_slug)
+
+        genresPelis = Pelicula_Genero.objects.filter(pelicula=pelicula).values('genero__name')
+
+        generos = [genero['genero__name'] for genero in genresPelis]
+        data = {
+                    "title": pelicula.title,
+                    "year": pelicula.year,
+                    "href": pelicula.href,
+                    "extract": pelicula.extract,
+                    "thumbnail": pelicula.thumbnail,
+                    "thumbnail_width": pelicula.thumbnail_width,
+                    "thumbnail_height": pelicula.thumbnail_height,
+                    "path": pelicula.path,
+                    "cast": [],
+                    "genres": generos
+                }
+
+
+        return HttpResponse(json.dumps(data))
+    
