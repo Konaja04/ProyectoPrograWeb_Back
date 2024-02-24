@@ -69,9 +69,18 @@ def verSalas(request):
     if request.method == 'GET':
         salas = Sala.objects.all()
         ciudades =  list(Genero.objects.all().values())
-        funciones =  list(Funcion.objects.all().values())
+        ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
+        funciones =  [
+            {
+                "sala_id": funcion['sala_id'],
+                "hora": [ ventana['hora'] for ventana in ventanas if ventana['id'] == funcion['ventana_id']][0]
+            } 
+            for funcion in list(Funcion.objects.all().values())
+        ]
+        print(funciones)
         for sala in salas:
             ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
+            funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
             data = {
                 "name":sala.name,
                 "phone_number":sala.phone_number ,
@@ -80,7 +89,8 @@ def verSalas(request):
                 "description":sala.description,
                 "path":sala.path,
                 "img":sala.img,
-                "ciudad":ciudad 
+                "ciudad":ciudad,
+                "available_times":funcionesDispo
             }
             response.append(data)
 
