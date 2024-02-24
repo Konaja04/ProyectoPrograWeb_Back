@@ -96,6 +96,7 @@ def verPelicula(request, pelicula_slug):
 
         generos = [genero['genero__name'] for genero in genresPelis]
         data = {
+                    "id":pelicula.id,
                     "title": pelicula.title,
                     "year": pelicula.year,
                     "href": pelicula.href,
@@ -110,4 +111,35 @@ def verPelicula(request, pelicula_slug):
 
 
         return HttpResponse(json.dumps(data))
-    
+
+def obtener_salas_disponibles(request, pelicula_id):
+    if request.method == 'GET':
+        funcion = Funcion.objects.filter(pelicula_id=pelicula_id).first()
+        ventana = funcion.ventana
+        funciones_ventana = Funcion.objects.filter(ventana=ventana)
+        ciudades = list(Genero.objects.all().values())
+        
+        salas_disponibles = [] 
+        
+        for funcion_ventana in funciones_ventana:
+            sala = funcion_ventana.sala
+            ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]            
+            date_str = ventana.date.strftime('%Y-%m-%d')
+            hour_str = ventana.hour.strftime('%H:%M:%S')
+
+            salas = { 
+                'id': sala.id,
+                "name": sala.name,
+                "phone_number": sala.phone_number,
+                "address": sala.address,
+                "second_address": sala.second_address,
+                "description": sala.description,
+                "path": sala.path,
+                "img": sala.img,
+                "ciudad": ciudad,
+                'date': date_str,
+                'hour': hour_str,
+            }
+            salas_disponibles.append(salas)
+
+        return HttpResponse(json.dumps(salas_disponibles))
