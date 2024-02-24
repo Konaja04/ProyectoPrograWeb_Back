@@ -6,25 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import *
 from datetime import datetime
-  
-def llenarActoresPeliculas(request):
-    data_peliculas  = 'backend_sals/datos.json'
-    with open (data_peliculas, "r") as peliculas:
-        try:
-            data_peliculas = json.load(peliculas)
-        except json.JSONDecodeError:
-            print("Error al cargar el archivo JSON.")
-            data_peliculas = []
-            return HttpResponse("xd")
-    if request.method == 'GET':
-        for peliculaJSON in data_peliculas:
-            for actorJSON in peliculaJSON['cast']: 
-                if Pelicula.objects.get(path = peliculaJSON['path']):
-                    peliX = Pelicula.objects.get(path = peliculaJSON['path'])
-                    actorX = Actor.objects.get(name = actorJSON)
-                    pxk = Pelicula_Actor(pelicula = peliX, actor = actorX)
-                    pxk.save()
-        return HttpResponse("llenadoActores xd")
+
 
 def verPeliculas(request):
     response = []
@@ -125,5 +107,3 @@ def loginPostJsonEndpoint(request):
                 "msg" : "Error en el login"
             }
             return HttpResponse(json.dumps(respuesta))
-
-
