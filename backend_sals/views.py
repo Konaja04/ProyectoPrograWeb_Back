@@ -33,7 +33,7 @@ def verPeliculas(request):
         peliculas = Pelicula.objects.all()
 
         genresPelis = list(Pelicula_Genero.objects.all().values())
-        print(genresPelis)
+        # print(genresPelis)
         genres =  list(Genero.objects.all().values())
 
         generosTranformado = [
@@ -64,3 +64,26 @@ def verPeliculas(request):
             response.append(data)
 
     return HttpResponse(json.dumps(response))
+def verSalas(request):
+    response = []
+    if request.method == 'GET':
+        salas = Sala.objects.all()
+        ciudades =  list(Genero.objects.all().values())
+        funciones =  list(Funcion.objects.all().values())
+        for sala in salas:
+            ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
+            data = {
+                "name":sala.name,
+                "phone_number":sala.phone_number ,
+                "address": sala.address ,
+                "second_address": sala.second_address,
+                "description":sala.description,
+                "path":sala.path,
+                "img":sala.img,
+                "ciudad":ciudad 
+            }
+            response.append(data)
+
+    return HttpResponse(json.dumps(response))
+
+
