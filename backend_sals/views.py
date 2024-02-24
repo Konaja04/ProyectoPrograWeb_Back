@@ -64,14 +64,24 @@ def verPeliculas(request):
             response.append(data)
 
     return HttpResponse(json.dumps(response))
+
 def verSalas(request):
     response = []
     if request.method == 'GET':
         salas = Sala.objects.all()
         ciudades =  list(Genero.objects.all().values())
-        funciones =  list(Funcion.objects.all().values())
+        ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
+        funciones =  [
+            {
+                "sala_id": funcion['sala_id'],
+                "hora": [ ventana['hora'] for ventana in ventanas if ventana['id'] == funcion['ventana_id']][0]
+            } 
+            for funcion in list(Funcion.objects.all().values())
+        ]
+        print(funciones)
         for sala in salas:
             ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
+            funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
             data = {
                 "name":sala.name,
                 "phone_number":sala.phone_number ,
@@ -80,11 +90,13 @@ def verSalas(request):
                 "description":sala.description,
                 "path":sala.path,
                 "img":sala.img,
-                "ciudad":ciudad 
+                "ciudad":ciudad,
+                "available_times":funcionesDispo
             }
             response.append(data)
 
     return HttpResponse(json.dumps(response))
+
 
 
 def verPelicula(request, pelicula_slug):
@@ -114,32 +126,39 @@ def verPelicula(request, pelicula_slug):
 
 def obtener_salas_disponibles(request, pelicula_id):
     if request.method == 'GET':
-        funcion = Funcion.objects.filter(pelicula_id=pelicula_id).first()
-        ventana = funcion.ventana
-        funciones_ventana = Funcion.objects.filter(ventana=ventana)
-        ciudades = list(Genero.objects.all().values())
         
+        salas = Sala.objects.all()    
+        ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
+        
+        
+        funciones =  [
+            {
+                "funcion_id": funcion['id'],   
+                "sala_id": funcion['sala_id'],
+                "hora": [ ventana['hora'] for ventana in ventanas if ventana['id'] == funcion['ventana_id']][0]
+            } 
+            for funcion in list(Funcion.objects.filter(pelicula_id=pelicula_id).values())
+        ]
+
         salas_disponibles = [] 
         
-        for funcion_ventana in funciones_ventana:
-            sala = funcion_ventana.sala
-            ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]            
-            date_str = ventana.date.strftime('%Y-%m-%d')
-            hour_str = ventana.hour.strftime('%H:%M:%S')
+        for sala in salas:
+                funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
+                if len(funcionesDispo) > 0 :
+                        
+                    data = {
+                        "name":sala.name,
+                        "phone_number":sala.phone_number ,
+                        "address": sala.address ,
+                        "second_address": sala.second_address,
+                        "description":sala.description,
+                        "path":sala.path,
+                        "img":sala.img,
+                        "available_times":funcionesDispo
+                    }
 
-            salas = { 
-                'id': sala.id,
-                "name": sala.name,
-                "phone_number": sala.phone_number,
-                "address": sala.address,
-                "second_address": sala.second_address,
-                "description": sala.description,
-                "path": sala.path,
-                "img": sala.img,
-                "ciudad": ciudad,
-                'date': date_str,
-                'hour': hour_str,
-            }
-            salas_disponibles.append(salas)
+                    print(funcionesDispo)
 
-        return HttpResponse(json.dumps(salas_disponibles))
+                    salas_disponibles.append(data)
+
+    return HttpResponse(json.dumps(salas_disponibles))
