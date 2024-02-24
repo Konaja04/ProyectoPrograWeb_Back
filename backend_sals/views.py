@@ -116,6 +116,7 @@ def loginPostJsonEndpoint(request):
                 "msg" : "",
                 "names": usuario.names,
                 "last_names": usuario.last_names,
+                "mail": usuario.email,
                 "img": usuario.img
             }
             return HttpResponse(json.dumps(respuesta))
