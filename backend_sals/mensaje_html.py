@@ -96,7 +96,6 @@ mensaje_html = """
                 <p>No olvides presentar este código en la entrada del cine.</p>
             </div>
             <p>Disfruta la función!</p>
-            <a href="https://localhost:3000/reservas" class="button">Ver detalles de la reserva</a>
         </div>
         <div class="footer">
             Salas de Cine Ulima &copy; 2024
