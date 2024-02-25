@@ -184,6 +184,7 @@ def verUsuarioReservas(request):
         response = {
             "reservas": reservas
         }
+        
         return HttpResponse(json.dumps(response))
 def verPelicula(request, pelicula_slug):
 
