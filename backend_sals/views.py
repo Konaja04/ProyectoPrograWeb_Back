@@ -285,6 +285,13 @@ def funcion_reserva(request, funcion_id):
         
         return HttpResponse(json.dumps(respuesta))
     
+
+def obtener_reservas_por_funcion(request, funcion_id):
+    if request.method == 'GET':
+        reservas = Reserva.objects.filter(funcion_id=funcion_id).values() 
+        return HttpResponse(json.dumps(list(reservas)))
+
+
 @csrf_exempt
 def registrarUsuario(request):
     if request.method == "POST":
