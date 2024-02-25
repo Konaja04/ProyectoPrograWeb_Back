@@ -241,67 +241,85 @@ def funcion_reserva(request, funcion_id):
         return HttpResponse(json.dumps(respuesta))
 
 
+# def verSala(request, sala_slug):
+
+#     if request.method == 'GET':
+#         sala = Sala.objects.get(path=sala_slug)
+
+#         ciudades =  Ciudad.objects.all(sala=sala).values('ciudad')
+# 	    funciones = Funcion.objects.all(sala=sala).values('hora')
+
+#         ciudad = [ciudad['name'] for ciudad in ciudades]
+# 	    funcion= [funcion['hora'] for funcion in funciones if 'hora' in funcion] # corregir?
+#         data = {
+#                         "name":sala.name,
+#                         "phone_number":sala.phone_number ,
+#                         "address": sala.address ,
+#                         "second_address": sala.second_address,
+#                         "description":sala.description,
+#                         "path":sala.path,
+#                         "img":sala.img,
+#                 }
+
+
+#         return HttpResponse(json.dumps(data))
+
+# def obtener_peliculas_disponibles(request, sala_id):
+#     if request.method == 'GET':
+        
+#         peliculas = Pelicula.objects.all()
+
+#         genresPelis = list(Pelicula_Genero.objects.all().values())
+#         genres =  list(Genero.objects.all().values())
+
+#         generosTranformado = [
+#             {
+#                 "pelicula_id": genero['pelicula_id'],
+#                 "genero_name": [
+#                     genre['name']
+#                     for genre in genres 
+#                     if genre['id'] == genero['genero_id']
+#                     ][0]
+#             }
+#             for genero in genresPelis]
+
+#         for pelicula in peliculas:
+            
+# 	    generos = [{"pelicula_id": genero['pelicula_id'], "genero_name": genero['name']} for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
+	    
+# 	    data = {
+#             	"title" : pelicula.title,
+#             	"year" : pelicula.year,
+#             	"href": pelicula.href,
+#             	"extract": pelicula.extract,
+#             	"thumbnail": pelicula.thumbnail,
+#             	"thumbnail_width": pelicula.thumbnail_width,
+#             	"thumbnail_height": pelicula.thumbnail_width,
+#             	"path": pelicula.path,
+#             	"cast": [],
+#             	"genres": generos
+#             }
+#             peliculas_disponibles.append(data)
+
+#     return HttpResponse(json.dumps(peliculas_disponibles))
+    
 def verSala(request, sala_slug):
 
     if request.method == 'GET':
+
         sala = Sala.objects.get(path=sala_slug)
+        ciudad = Ciudad.objects.get(id=sala.ciudad.id)
 
-        ciudades =  Ciudad.objects.all(sala=sala).values('ciudad')
-	    funciones = Funcion.objects.all(sala=sala).values('hora')
+        response = {
+            "name": sala.name,
+            "phone_number": sala.phone_number,
+            "address": sala.address,
+            "second_address": sala.second_address,
+            "description": sala.description,
+            "path": sala.path,
+            "img": sala.img,
+            "ciudad": ciudad.name,
+        }
 
-        ciudad = [ciudad['name'] for ciudad in ciudades]
-	    funcion= [funcion['hora'] for funcion in funciones if 'hora' in funcion] # corregir?
-        data = {
-                    "id": pelicula.id,
-                    "name": sala.name,
-                    "phone_number":sala.phone_number ,
-                    "address": sala.address ,
-                    "second_address": sala.second_address,
-                    "description": sala.description,
-                    "path": sala.path,
-                    "img": sala.img,
-                    "ciudad": ciudad,
-                    "available_times": funcion
-                }
-
-
-        return HttpResponse(json.dumps(data))
-
-def obtener_peliculas_disponibles(request, sala_id):
-    if request.method == 'GET':
-        
-        peliculas = Pelicula.objects.all()
-
-        genresPelis = list(Pelicula_Genero.objects.all().values())
-        genres =  list(Genero.objects.all().values())
-
-        generosTranformado = [
-            {
-                "pelicula_id": genero['pelicula_id'],
-                "genero_name": [
-                    genre['name']
-                    for genre in genres 
-                    if genre['id'] == genero['genero_id']
-                    ][0]
-            }
-            for genero in genresPelis]
-
-        for pelicula in peliculas:
-            
-	    generos = [{"pelicula_id": genero['pelicula_id'], "genero_name": genero['name']} for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
-	    
-	    data = {
-            	"title" : pelicula.title,
-            	"year" : pelicula.year,
-            	"href": pelicula.href,
-            	"extract": pelicula.extract,
-            	"thumbnail": pelicula.thumbnail,
-            	"thumbnail_width": pelicula.thumbnail_width,
-            	"thumbnail_height": pelicula.thumbnail_width,
-            	"path": pelicula.path,
-            	"cast": [],
-            	"genres": generos
-            }
-            peliculas_disponibles.append(data)
-
-    return HttpResponse(json.dumps(peliculas_disponibles))
+    
+    return HttpResponse(json.dumps(response))    
