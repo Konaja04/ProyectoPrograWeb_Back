@@ -11,5 +11,8 @@ urlpatterns = [
     path('verificar-funcion/<int:funcion_id>/', funcion_reserva),
     path('guardarReserva', guardarReserva),
     path('verReservas', verUsuarioReservas),
+    path('register', registrarUsuario),
+    path('enviarCorreoRecuperacion', enviarCorreoRecuperacion),
+    path('cambiarPassword', cambiarContraseña)
 
 ]

@@ -7,7 +7,7 @@ class User(models.Model):
     codigo = models.IntegerField()
     email = models.CharField(max_length=200, unique = True)
     password = models.CharField(max_length=200)
-    img = models.CharField(max_length = 300, unique = True)
+    img = models.CharField(max_length = 400)
     def __str__(self):
         return self.names
 
