@@ -53,7 +53,7 @@ def verSalas(request):
     response = []
     if request.method == 'GET':
         salas = Sala.objects.all()
-        ciudades =  list(Genero.objects.all().values())
+        ciudades =  list(Ciudad.objects.all().values())
         ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
         funciones =  [
             {
@@ -66,15 +66,15 @@ def verSalas(request):
             ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
             funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
             data = {
-                "name":sala.name,
-                "phone_number":sala.phone_number ,
+                "name": sala.name,
+                "phone_number": sala.phone_number ,
                 "address": sala.address ,
                 "second_address": sala.second_address,
-                "description":sala.description,
-                "path":sala.path,
-                "img":sala.img,
-                "ciudad":ciudad,
-                "available_times":funcionesDispo
+                "description": sala.description,
+                "path": sala.path,
+                "img": sala.img,
+                "ciudad": ciudad,
+                "available_times": funcionesDispo
             }
             response.append(data)
 
@@ -210,7 +210,6 @@ def obtener_salas_disponibles(request, pelicula_id):
     return HttpResponse(json.dumps(salas_disponibles))
 
 
-
 def funcion_reserva(request, funcion_id):
     if request.method == 'GET':
         
@@ -242,3 +241,67 @@ def funcion_reserva(request, funcion_id):
         return HttpResponse(json.dumps(respuesta))
 
 
+def verSala(request, sala_slug):
+
+    if request.method == 'GET':
+        sala = Sala.objects.get(path=sala_slug)
+
+        ciudades =  Ciudad.objects.all(sala=sala).values('ciudad')
+	    funciones = Funcion.objects.all(sala=sala).values('hora')
+
+        ciudad = [ciudad['name'] for ciudad in ciudades]
+	    funcion= [funcion['hora'] for funcion in funciones if 'hora' in funcion] # corregir?
+        data = {
+                    "id": pelicula.id,
+                    "name": sala.name,
+                    "phone_number":sala.phone_number ,
+                    "address": sala.address ,
+                    "second_address": sala.second_address,
+                    "description": sala.description,
+                    "path": sala.path,
+                    "img": sala.img,
+                    "ciudad": ciudad,
+                    "available_times": funcion
+                }
+
+
+        return HttpResponse(json.dumps(data))
+
+def obtener_peliculas_disponibles(request, sala_id):
+    if request.method == 'GET':
+        
+        peliculas = Pelicula.objects.all()
+
+        genresPelis = list(Pelicula_Genero.objects.all().values())
+        genres =  list(Genero.objects.all().values())
+
+        generosTranformado = [
+            {
+                "pelicula_id": genero['pelicula_id'],
+                "genero_name": [
+                    genre['name']
+                    for genre in genres 
+                    if genre['id'] == genero['genero_id']
+                    ][0]
+            }
+            for genero in genresPelis]
+
+        for pelicula in peliculas:
+            
+	    generos = [{"pelicula_id": genero['pelicula_id'], "genero_name": genero['name']} for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
+	    
+	    data = {
+            	"title" : pelicula.title,
+            	"year" : pelicula.year,
+            	"href": pelicula.href,
+            	"extract": pelicula.extract,
+            	"thumbnail": pelicula.thumbnail,
+            	"thumbnail_width": pelicula.thumbnail_width,
+            	"thumbnail_height": pelicula.thumbnail_width,
+            	"path": pelicula.path,
+            	"cast": [],
+            	"genres": generos
+            }
+            peliculas_disponibles.append(data)
+
+    return HttpResponse(json.dumps(peliculas_disponibles))
