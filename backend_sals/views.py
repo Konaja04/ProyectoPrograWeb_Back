@@ -11,7 +11,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from .mensaje_html import devolver_mensaje
 from .credentials import *
-
 def verPeliculas(request):
     response = []
     if request.method == 'GET':
@@ -242,62 +241,85 @@ def funcion_reserva(request, funcion_id):
         return HttpResponse(json.dumps(respuesta))
 
 
-def verSala(request):
-    response = []
+# def verSala(request, sala_slug):
+
+#     if request.method == 'GET':
+#         sala = Sala.objects.get(path=sala_slug)
+
+#         ciudades =  Ciudad.objects.all(sala=sala).values('ciudad')
+# 	    funciones = Funcion.objects.all(sala=sala).values('hora')
+
+#         ciudad = [ciudad['name'] for ciudad in ciudades]
+# 	    funcion= [funcion['hora'] for funcion in funciones if 'hora' in funcion] # corregir?
+#         data = {
+#                         "name":sala.name,
+#                         "phone_number":sala.phone_number ,
+#                         "address": sala.address ,
+#                         "second_address": sala.second_address,
+#                         "description":sala.description,
+#                         "path":sala.path,
+#                         "img":sala.img,
+#                 }
+
+
+#         return HttpResponse(json.dumps(data))
+
+# def obtener_peliculas_disponibles(request, sala_id):
+#     if request.method == 'GET':
+        
+#         peliculas = Pelicula.objects.all()
+
+#         genresPelis = list(Pelicula_Genero.objects.all().values())
+#         genres =  list(Genero.objects.all().values())
+
+#         generosTranformado = [
+#             {
+#                 "pelicula_id": genero['pelicula_id'],
+#                 "genero_name": [
+#                     genre['name']
+#                     for genre in genres 
+#                     if genre['id'] == genero['genero_id']
+#                     ][0]
+#             }
+#             for genero in genresPelis]
+
+#         for pelicula in peliculas:
+            
+# 	    generos = [{"pelicula_id": genero['pelicula_id'], "genero_name": genero['name']} for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
+	    
+# 	    data = {
+#             	"title" : pelicula.title,
+#             	"year" : pelicula.year,
+#             	"href": pelicula.href,
+#             	"extract": pelicula.extract,
+#             	"thumbnail": pelicula.thumbnail,
+#             	"thumbnail_width": pelicula.thumbnail_width,
+#             	"thumbnail_height": pelicula.thumbnail_width,
+#             	"path": pelicula.path,
+#             	"cast": [],
+#             	"genres": generos
+#             }
+#             peliculas_disponibles.append(data)
+
+#     return HttpResponse(json.dumps(peliculas_disponibles))
+    
+def verSala(request, sala_slug):
+
     if request.method == 'GET':
-        salas = Sala.objects.all()
-        ciudades = list(Ciudad.objects.all().values())
-        ventanas = [{"id": ventana['id'], "hora": ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
-        funciones = [
-            {
-                "sala_id": funcion['sala_id'],
-                "hora": [ventana['hora'] for ventana in ventanas if ventana['id'] == funcion['ventana_id']][0]
-            }
-            for funcion in list(Funcion.objects.all().values())
-        ]
-        for sala in salas:
-            ciudad = [ciudad['name'] for ciudad in ciudades if ciudad['id'] == sala.ciudad]
-            funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['sala_id'] == sala.pk]
-            data = {
-                "name": sala.name,
-                "phone_number": sala.phone_number,
-                "address": sala.address,
-                "second_address": sala.second_address,
-                "description": sala.description,
-                "path": sala.path,
-                "img": sala.img,
-                "ciudad": ciudad,
-                "available_times": funcionesDispo
-            }
-            response.append(data)
 
-    return HttpResponse(json.dumps(response))
+        sala = Sala.objects.get(path=sala_slug)
+        ciudad = Ciudad.objects.get(id=sala.ciudad.id)
 
+        response = {
+            "name": sala.name,
+            "phone_number": sala.phone_number,
+            "address": sala.address,
+            "second_address": sala.second_address,
+            "description": sala.description,
+            "path": sala.path,
+            "img": sala.img,
+            "ciudad": ciudad.name,
+        }
 
-def obtener_peliculas_disponibles(request, sala_id):
-    if request.method == 'GET':
-        peliculas = Pelicula.objects.all()
-        funciones = Funcion.objects.filter(sala_id=sala_id)
-
-        peliculas_disponibles = []
-
-        for pelicula in peliculas:
-            funciones_pelicula = funciones.filter(pelicula_id=pelicula.id)
-            funcionesDispo = [{"funcion_id": funcion.id, "hora": funcion.ventana.hour.strftime("%H:%M")} for funcion in funciones_pelicula]
-
-            if funcionesDispo:
-                data = {
-                    "title": pelicula.title,
-                    "year": pelicula.year,
-                    "href": pelicula.href,
-                    "extract": pelicula.extract,
-                    "thumbnail": pelicula.thumbnail,
-                    "thumbnail_width": pelicula.thumbnail_width,
-                    "thumbnail_height": pelicula.thumbnail_height,
-                    "path": pelicula.path,
-                    "cast": [],
-                    "available_times": funcionesDispo
-                }
-                peliculas_disponibles.append(data)
-
-    return HttpResponse(json.dumps(peliculas_disponibles))
+    
+    return HttpResponse(json.dumps(response))    
