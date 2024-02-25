@@ -381,3 +381,10 @@ def cambiarContraseña(request):
                 "msg" : "Error en el cambio"
             }
             return HttpResponse(json.dumps(respuesta))
+
+
+def cartelera(request):
+    if request.method == "GET":
+        funciones = [funcion['pelicula_id'] for funcion in list(Funcion.objects.all().values())]
+        cartelera = [pelicula for pelicula in list(Pelicula.objects.all().values()) if pelicula['id'] in funciones ]
+        return HttpResponse(json.dumps(cartelera))
