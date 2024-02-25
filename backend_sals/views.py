@@ -240,5 +240,36 @@ def funcion_reserva(request, funcion_id):
             }
         
         return HttpResponse(json.dumps(respuesta))
+    
+@csrf_exempt
+def registrarUsuario(request):
+    if request.method == "POST":
+        data = request.body
+        userDict = json.loads(data)
+
+        if userDict["codigo"] == "" or userDict["password"] == "" or userDict["names"] == "" or userDict["last_names"] == "" or userDict["email"] == "" or userDict["last_names"] == "":
+            errorDict = {
+                "msg" : "Debe ingresar todos los datos requeridos"
+            }
+            return HttpResponse(json.dumps(errorDict))
+        
+        if userDict["img"] == "":
+            userDict["img"] = "https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
+    
+        # insert user
+        user = User(
+            names=userDict["names"],
+            last_names=userDict["last_names"],
+            codigo=userDict["codigo"],
+            email=userDict["email"],
+            password=userDict["password"],
+            img=userDict["img"]
+        )
+        user.save()
+
+        respDict = {
+            "msg" : ""
+        }
+        return HttpResponse(json.dumps(respDict))
 
 
