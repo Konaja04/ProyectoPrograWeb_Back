@@ -145,7 +145,46 @@ def enviarReserva(request):
                 "msg" : "Error en el envio de correo"
             }
             return HttpResponse(json.dumps(respuesta))
-
+@csrf_exempt
+def guardarReserva(request):
+    if request.method == "POST":
+        data = request.body
+        reservaData = json.loads(data)
+        funcion = Funcion.objects.get(pk = reservaData['funcion_id'])
+        usuario = User.objects.get(email = reservaData['usuario'])
+        asientos = reservaData['asientos']
+        nuevaReserva = Reserva(usuario = usuario, funcion = funcion, asientos = asientos)
+        nuevaReserva.save()
+        response  = {
+            "msg": ""
+        }
+        return HttpResponse(json.dumps(response))
+@csrf_exempt
+def verUsuarioReservas(request):
+    if request.method == "POST":
+        data = request.body
+        userData = json.loads(data)
+        usuario_id = User.objects.get(email = userData['email']).pk
+        funciones = list(Funcion.objects.all().values())
+        peliculas = list(Pelicula.objects.all().values())
+        ventanas = ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M"),"fecha":ventana['date'].strftime('%Y-%m-%d')} for ventana in list(Ventana.objects.all().values())]
+        reservas = [
+            {
+                "funcion": [
+                    {
+                        "pelicula": list(filter(lambda pelicula: pelicula['id'] == funcion['pelicula_id'], peliculas))[0],
+                        "ventana": list(filter(lambda ventana: ventana['id'] == funcion['ventana_id'], ventanas))[0]
+                    }
+                    for funcion in funciones if funcion['id'] == reserva['funcion_id']
+                ][0] ,
+                "asientos": reserva['asientos']
+            }
+            for reserva in list(Reserva.objects.filter(usuario = usuario_id).values())
+        ]
+        response = {
+            "reservas": reservas
+        }
+        return HttpResponse(json.dumps(response))
 def verPelicula(request, pelicula_slug):
 
     if request.method == 'GET':
