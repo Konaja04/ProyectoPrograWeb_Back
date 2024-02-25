@@ -252,6 +252,7 @@ def verSala(request, sala_slug):
         formatoDisponible = [formato.formato.name for formato in formato]
 
         response = {
+            "id":sala.pk,
             "name": sala.name,
             "phone_number": sala.phone_number,
             "address": sala.address,
@@ -270,7 +271,6 @@ def obtener_peliculas_disponibles(request, sala_id):
     if request.method == 'GET':
         
         peliculas = Pelicula.objects.all()
-        salas = list(Sala.objects.all().values())
         ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
         funciones =  [
             {
@@ -298,22 +298,22 @@ def obtener_peliculas_disponibles(request, sala_id):
         peliculasDisponibles = []
 
         for pelicula in peliculas: 
-            funcionesDispo = [funcion['hora'] for funcion in funciones if funcion['pelicula_id'] == pelicula.id]
+            funcionesDispo = [funcion for funcion in funciones if funcion['pelicula_id'] == pelicula.id]
             generos = [genero['genero_name'] for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
             if len(funcionesDispo) > 0 :
                     
                     data = {
                         "id":pelicula.id,
                         "title": pelicula.title,
-                        # "year": pelicula.year,
-                        # "href": pelicula.href,
-                        # "extract": pelicula.extract,
-                        # "thumbnail": pelicula.thumbnail,
-                        # "thumbnail_width": pelicula.thumbnail_width,
-                        # "thumbnail_height": pelicula.thumbnail_height,
-                        # "path": pelicula.path,
-                        # "cast": [],
-                        # "genres": generos,
+                        "year": pelicula.year,
+                        "href": pelicula.href,
+                        "extract": pelicula.extract,
+                        "thumbnail": pelicula.thumbnail,
+                        "thumbnail_width": pelicula.thumbnail_width,
+                        "thumbnail_height": pelicula.thumbnail_height,
+                        "path": pelicula.path,
+                        "cast": [],
+                        "genres": generos,
                         "available_times":funcionesDispo,
                     }
 
