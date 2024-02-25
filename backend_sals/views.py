@@ -9,8 +9,12 @@ from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from .mensaje_html import devolver_mensaje
+from .mensaje_html import devolver_mensaje, generar_mensaje_recuperacion
 from .credentials import *
+
+import secrets
+import base64
+
 def verPeliculas(request):
     response = []
     if request.method == 'GET':
@@ -273,3 +277,67 @@ def registrarUsuario(request):
         return HttpResponse(json.dumps(respDict))
 
 
+
+@csrf_exempt
+def enviarCorreoRecuperacion(request):
+    if request.method == "POST":
+        data = request.body
+        userData = json.loads(data)
+        usuario = 'KONAHA'
+        asunto = 'RECUPERACIÓN DE CUENTA'
+        destinatarios = [userData['correo']]
+        
+        codigo = ''.join(secrets.choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(5))
+        codigo_codificado = base64.urlsafe_b64encode(codigo.encode()).decode()
+        
+        
+        mensaje  = generar_mensaje_recuperacion(codigo)
+
+        msg = MIMEMultipart('alternative')
+        msg['From'] = usuario
+        msg['To'] = ', '.join(destinatarios)
+        msg['Subject'] = asunto
+        msg.attach(MIMEText(mensaje, 'html'))
+
+        try: 
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(USER_MAIL, PASSWORD)
+                server.sendmail(USER_MAIL, destinatarios, msg.as_string())
+                print('Correo enviado')
+                respuesta = {
+                    "msg":"",
+                    "codigo": codigo_codificado
+                }
+                return HttpResponse(json.dumps(respuesta))
+
+        except:
+            print("no envie nada xd")
+            respuesta = {
+                "msg" : "Error en el envio de correo"
+            }
+            return HttpResponse(json.dumps(respuesta))
+
+
+@csrf_exempt
+def cambiarContraseña(request):
+    if request.method == "POST":
+        data = request.body
+        userData = json.loads(data)
+
+        correo = userData["correo"]
+        nueva_password = userData["password"]
+
+        try:
+            usuario = User.objects.get(email = correo)
+            usuario.password = nueva_password
+            usuario.save()
+            respuesta = {
+                "msg" : ""
+            }
+            return HttpResponse(json.dumps(respuesta))
+        except:
+            respuesta = {
+                "msg" : "Error en el cambio"
+            }
+            return HttpResponse(json.dumps(respuesta))
