@@ -96,7 +96,6 @@ mensaje_html = """
                 <p>No olvides presentar este código en la entrada del cine.</p>
             </div>
             <p>Disfruta la función!</p>
-            <a href="https://localhost:3000/reservas" class="button">Ver detalles de la reserva</a>
         </div>
         <div class="footer">
             Salas de Cine Ulima &copy; 2024
@@ -104,6 +103,73 @@ mensaje_html = """
     </div>
 </body>
 </html>
+"""
+mensaje_html_recuperacion = """
+<html>
+<head>
+    <style>
+        body {{
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }}
+        .container {{
+            max-width: 600px;
+            margin: auto;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }}
+        .header {{
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }}
+        .content {{
+            padding: 20px;
+            text-align: center;
+        }}
+        .code {{
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin: 20px 0;
+        }}
+        .footer {{
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Recuperación de Contraseña
+        </div>
+        <div class="content">
+            <p>Hola,</p>
+            <p>Has solicitado restablecer tu contraseña. Utiliza el siguiente código para continuar con el proceso de recuperación:</p>
+            <div class="code">
+                {codigo}
+            </div>
+            <p>Si no has solicitado este cambio, por favor ignora este correo.</p>
+        </div>
+        <div class="footer">
+            Por tu seguridad, no compartas este código con nadie.
+        </div>
+    </div>
+</body>
+</html>
+
 """
 
 def devolver_mensaje(data):
@@ -113,3 +179,5 @@ def devolver_mensaje(data):
     sala = data['sala']
     peli = data['peli']  
     return mensaje_html.format(nombre=nombre, apellido=apellido, cantidad=cantidad, sala=sala, peli=peli)
+def generar_mensaje_recuperacion(codigo_recuperacion):
+    return mensaje_html_recuperacion.format(codigo=codigo_recuperacion)
