@@ -194,6 +194,12 @@ def verPelicula(request, pelicula_slug):
 
     if request.method == 'GET':
         pelicula = Pelicula.objects.get(path=pelicula_slug)
+        actores = list(Actor.objects.all().values())
+        actores = [
+            [actor["name"] for actor in actores if actor["id"] == fila["actor_id"]][0]
+                
+            for fila in list(Pelicula_Actor.objects.all().values()) if fila["pelicula_id"] == pelicula.pk
+        ]
 
         genresPelis = Pelicula_Genero.objects.filter(pelicula=pelicula).values('genero__name')
 
@@ -208,7 +214,7 @@ def verPelicula(request, pelicula_slug):
                     "thumbnail_width": pelicula.thumbnail_width,
                     "thumbnail_height": pelicula.thumbnail_height,
                     "path": pelicula.path,
-                    "cast": [],
+                    "cast": actores,
                     "genres": generos
                 }
 
