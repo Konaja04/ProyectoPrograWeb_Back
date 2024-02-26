@@ -427,6 +427,7 @@ def obtener_peliculas_disponibles(request, sala_id):
         ventanas = [{"id":ventana['id'],"hora":ventana['hour'].strftime("%H:%M")} for ventana in list(Ventana.objects.all().values())]
         funciones =  [
             {
+                "funcion_id": funcion['id'],
                 "sala_id": funcion['sala_id'],
                 "hora": [ ventana['hora'] for ventana in ventanas if ventana['id'] == funcion['ventana_id']][0],
                 "pelicula_id": funcion['pelicula_id'],
@@ -451,7 +452,7 @@ def obtener_peliculas_disponibles(request, sala_id):
         peliculasDisponibles = []
 
         for pelicula in peliculas: 
-            funcionesDispo = [funcion for funcion in funciones if funcion['pelicula_id'] == pelicula.id]
+            funcionesDispo = [{"funcion_id": funcion['funcion_id'], "hora": funcion['hora']} for funcion in funciones if funcion['pelicula_id'] == pelicula.id]
             generos = [genero['genero_name'] for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
             if len(funcionesDispo) > 0 :
                     
