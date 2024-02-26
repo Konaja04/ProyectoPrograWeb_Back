@@ -21,6 +21,8 @@ urlpatterns = [
     path('register', registrarUsuario),
     path('enviarCorreoRecuperacion', enviarCorreoRecuperacion),
     path('cambiarPassword', cambiarContraseña),
-    path('cartelera', cartelera)
+    path('cartelera', cartelera),
+    path('guardarCalificacion', guardarCalificacion)
+
 
 ]

@@ -102,6 +102,7 @@ def loginPostJsonEndpoint(request):
             usuario = listaUsuariosFiltrada[0]
             respuesta = {
                 "msg" : "",
+                "id":usuario.id,
                 "names": usuario.names,
                 "last_names": usuario.last_names,
                 "mail": usuario.email,
@@ -163,6 +164,7 @@ def guardarReserva(request):
             "msg": ""
         }
         return HttpResponse(json.dumps(response))
+
 @csrf_exempt
 def verUsuarioReservas(request):
     if request.method == "POST":
@@ -480,3 +482,19 @@ def obtener_peliculas_disponibles(request, sala_id):
                     peliculasDisponibles.append(data)
 
         return HttpResponse(json.dumps(peliculasDisponibles))
+
+
+@csrf_exempt
+def guardarCalificacion(request):
+    if request.method == "POST":
+        data = request.body
+        calificacionesData = json.loads(data)
+        pelicula = Pelicula.objects.get(pk = calificacionesData['pelicula_id'])
+        usuario = User.objects.get(pk = calificacionesData['usuario_id'])
+        calificacion = reservaData['calificacion']        
+        nuevaCalificacion = Pelicula_Usuario(usuario = usuario, pelicula = pelicula, calificacion = calificacion)
+        nuevaCalificacion.save()
+        response  = {
+            "msg": ""
+        }
+        return HttpResponse(json.dumps(response))
