@@ -654,7 +654,14 @@ def getRecomendaciones(request, user_id):
                     puntuacion += preferencia['peso']
             data = {
                         "id":pelicula.pk,
-                        "title": pelicula.title,
+                        "title": pelicula.title,                    
+                        "year": pelicula.year,
+                        "href": pelicula.href,
+                        "extract": pelicula.extract,
+                        "thumbnail": pelicula.thumbnail,
+                        "thumbnail_width": pelicula.thumbnail_width,
+                        "thumbnail_height": pelicula.thumbnail_height,
+                        "path": pelicula.path,
                         "path": pelicula.path,
                         "puntuacion": puntuacion
             }
