@@ -22,7 +22,9 @@ urlpatterns = [
     path('enviarCorreoRecuperacion', enviarCorreoRecuperacion),
     path('cambiarPassword', cambiarContraseña),
     path('cartelera', cartelera),
-    path('guardarCalificacion', guardarCalificacion)
+    # path('guardarCalificacion', guardarCalificacion),
+    path('definirPreferenciasUsuario', definirPreferenciasUsuario),
+    path('getRecomendaciones/<int:user_id>', getRecomendaciones)
 
 
 ]
