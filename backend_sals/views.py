@@ -531,3 +531,182 @@ def monstrarTop(request):
             for pelicula in peliculas_calificaciones_promedio
         ]
         return HttpResponse(json.dumps(top))
+
+def definirPreferenciasUsuario(user_id):
+        user_id = 4
+        Usuario_Keyword.objects.filter(usuario_id=user_id).delete()
+        Usuario_Genero.objects.filter(usuario_id=user_id).delete()
+        Usuario_Actor.objects.filter(usuario_id=user_id).delete()
+        pesoGeneros = 0.60
+        pesoKeywords = 0.30
+        pesoCast = 0.10
+
+        calificaciones = list(Pelicula_Usuario.objects.filter(usuario_id = user_id).values())
+        peliculas = Pelicula.objects.all()
+
+        # peliculas_usuario_ids = list(map(lambda x: x['pelicula_id'] , calificaciones))
+        peliculas_usuario = Pelicula_Usuario.objects.filter(usuario_id=user_id).values_list('pelicula_id', flat=True)
+
+        # actoresPelis = list(
+        #     filter(
+        #         lambda actor: actor['pelicula__id'] in peliculas_usuario_ids ,
+        #         list(Pelicula_Actor.objects.filter().values('actor__id', 'pelicula__id'))
+        #     )
+        # )
+
+        # genresPelis = list(
+        #     filter(
+        #     lambda genero: genero['pelicula__id'] in peliculas_usuario_ids,
+        #     Pelicula_Genero.objects.all().values('genero__id', 'pelicula__id')
+        #     )
+        # )
+        
+        # keywordsPelis = list(
+        #     filter(
+        #        lambda keyword: keyword['pelicula__id'] in peliculas_usuario_ids ,
+        #     Pelicula_Keyword.objects.all().values('keyword__id','pelicula__id')
+        #     )
+        # )
+        actoresPelis = Pelicula_Actor.objects.filter(pelicula_id__in=peliculas_usuario).values('actor_id', 'pelicula_id').distinct()
+        genresPelis = Pelicula_Genero.objects.filter(pelicula_id__in=peliculas_usuario).values('genero_id', 'pelicula_id').distinct()
+        keywordsPelis = Pelicula_Keyword.objects.filter(pelicula_id__in=peliculas_usuario).values('keyword_id', 'pelicula_id').distinct()
+
+        calificacionesTransformado = [
+            [   {
+                "pelicula_id": pelicula.pk,
+                "actores_ids": [actor['actor_id'] for actor in actoresPelis if actor['pelicula_id'] == pelicula.pk],
+                "generos_ids": [genero['genero_id'] for genero in genresPelis if genero['pelicula_id'] == pelicula.pk],
+                "keywords_ids": [keyword['keyword_id'] for keyword in keywordsPelis if keyword['pelicula_id'] == pelicula.pk],
+                # "actores_ids": [actor['actor__id'] for actor in actoresPelis if actor['pelicula__id'] == pelicula.pk],
+                # "generos_ids": [genero['genero__id'] for genero in genresPelis if genero['pelicula__id'] == pelicula.pk],
+                # "keywords_ids": [keyword['keyword__id'] for keyword in keywordsPelis if keyword['pelicula__id'] == pelicula.pk],
+                "calificacion": fila['calificacion']
+            } 
+            for pelicula in peliculas if pelicula.pk== fila['pelicula_id']
+            ][0]
+            for fila in calificaciones
+        ]
+        # actoresPelis = list({d['actor__id']: d for d in actoresPelis}.values())
+        # genresPelis = list({d['genero__id']: d for d in genresPelis}.values())
+        # keywordsPelis = list({d['keyword__id']: d for d in keywordsPelis}.values())
+        actoresPelis = list({d['actor_id']: d for d in actoresPelis}.values())
+        genresPelis = list({d['genero_id']: d for d in genresPelis}.values())
+        keywordsPelis = list({d['keyword_id']: d for d in keywordsPelis}.values())
+
+
+
+        total = 0
+        preferencias_actores = []
+        for actor in actoresPelis:
+            sum_etiqueta = 0
+            for pelicula in calificacionesTransformado:
+                # if actor['actor__id'] in pelicula['actores_ids']:
+                if actor['actor_id'] in pelicula['actores_ids']:
+                    sum_etiqueta += pelicula['calificacion'] * pesoCast
+            # preferencias_actores.append({"id": actor['actor__id'], "peso": sum_etiqueta})
+            preferencias_actores.append({"id": actor['actor_id'], "peso": sum_etiqueta})
+            total += sum_etiqueta
+
+        preferencias_generos = []
+        for genero in genresPelis:
+            sum_etiqueta = 0
+            for pelicula in calificacionesTransformado:
+                # if genero['genero__id'] in pelicula['generos_ids']:
+                if genero['genero_id'] in pelicula['generos_ids']:
+                    sum_etiqueta += pelicula['calificacion'] * pesoGeneros
+            # preferencias_generos.append({"id": genero['genero__id'], "peso": sum_etiqueta})
+            preferencias_generos.append({"id": genero['genero_id'], "peso": sum_etiqueta})
+            total += sum_etiqueta
+
+        preferencias_keywords = []
+        for keyword in keywordsPelis:
+            sum_etiqueta = 0
+            for pelicula in calificacionesTransformado:
+                # if keyword['keyword__id'] in pelicula['keywords_ids']:
+                if keyword['keyword_id'] in pelicula['keywords_ids']:
+                    sum_etiqueta += pelicula['calificacion'] * pesoKeywords
+            # preferencias_keywords.append({"id": keyword['keyword__id'], "peso": sum_etiqueta})
+            preferencias_keywords.append({"id": keyword['keyword_id'], "peso": sum_etiqueta})
+            total += sum_etiqueta
+
+        #Creando data
+        for preferencia in preferencias_actores:
+            nuevaPreferencia = Usuario_Actor(
+                usuario_id = user_id,  
+                actor_id = preferencia['id'], 
+                peso = preferencia['peso']/total
+            )
+            nuevaPreferencia.save()
+        for preferencia in preferencias_generos:
+            nuevaPreferencia = Usuario_Genero(
+                usuario_id = user_id,  
+                genero_id = preferencia['id'], 
+                peso = preferencia['peso']/total
+            )
+            nuevaPreferencia.save()
+        for preferencia in preferencias_keywords:
+            nuevaPreferencia = Usuario_Keyword(
+                usuario_id = user_id,  
+                keyword_id = preferencia['id'], 
+                peso = preferencia['peso']/total
+            )
+            nuevaPreferencia.save()
+
+        return HttpResponse(json.dumps(calificacionesTransformado))
+
+
+
+def getRecomendaciones(request, user_id):
+    if request.method == 'GET':
+        # data = request.body
+        # user_id = json.loads(data)['user_id']
+        calificaciones = list(map(lambda x: x['pelicula_id'],list(Pelicula_Usuario.objects.filter(usuario_id = user_id).values('pelicula_id'))))
+        preferenciasCast = list(Usuario_Actor.objects.filter(usuario_id = user_id).values('actor__id', 'peso'))
+        preferenciasGeneros = list(Usuario_Genero.objects.filter(usuario_id = user_id).values('genero__id', 'peso'))
+        preferenciasKeywords = list(Usuario_Keyword.objects.filter(usuario_id = user_id).values('keyword__id', 'peso'))
+
+        actoresPelis = list(Pelicula_Actor.objects.all().values('actor__id', 'pelicula__id'))
+        genresPelis = list(Pelicula_Genero.objects.all().values('genero__id', 'pelicula__id'))
+        keywordsPelis = list(Pelicula_Keyword.objects.all().values('keyword__id', 'pelicula__id'))
+
+        peliculas = Pelicula.objects.all()
+        recomendaciones = []
+        for pelicula in peliculas:
+            puntuacion = 0
+            cast = [row['actor__id'] for row in actoresPelis if  row['pelicula__id'] == pelicula.pk]
+            genres = [row['genero__id'] for row in genresPelis if  row['pelicula__id'] == pelicula.pk]
+            keywords = [row['keyword__id'] for row in keywordsPelis if  row['pelicula__id'] == pelicula.pk]
+            for preferencia in preferenciasCast:
+                if preferencia['actor__id'] in cast:
+                    puntuacion += preferencia['peso']
+            for preferencia in preferenciasGeneros:
+                if preferencia['genero__id'] in genres:
+                    puntuacion += preferencia['peso']
+            for preferencia in preferenciasKeywords:
+                if preferencia['keyword__id'] in keywords:
+                    puntuacion += preferencia['peso']
+            data = {
+                        "id":pelicula.pk,
+                        "title": pelicula.title,                    
+                        "year": pelicula.year,
+                        "href": pelicula.href,
+                        "extract": pelicula.extract,
+                        "thumbnail": pelicula.thumbnail,
+                        "thumbnail_width": pelicula.thumbnail_width,
+                        "thumbnail_height": pelicula.thumbnail_height,
+                        "path": pelicula.path,
+                        "path": pelicula.path,
+                        "puntuacion": puntuacion
+            }
+            if (puntuacion > 0):
+                recomendaciones.append(data)
+        recomendaciones_ordenadas = sorted(recomendaciones, key=lambda x: x['puntuacion'], reverse=True)
+        response = []
+        conta = 0
+        for recomendacion in recomendaciones_ordenadas:
+            if recomendacion['id'] not in calificaciones:
+                response.append(recomendacion)
+            if conta == 10:
+                break
+            conta += 1
+        return HttpResponse(json.dumps(response))

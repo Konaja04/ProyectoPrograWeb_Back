@@ -23,7 +23,9 @@ urlpatterns = [
     path('cambiarPassword', cambiarContraseña),
     path('cartelera', cartelera),
     path('guardarCalificacion', guardarCalificacion),
-    path('monstrarTop', monstrarTop)
+    path('monstrarTop', monstrarTop),
+    path('definirPreferenciasUsuario', definirPreferenciasUsuario),
+    path('getRecomendaciones/<int:user_id>', getRecomendaciones)
 
 
 ]
