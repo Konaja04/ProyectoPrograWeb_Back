@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Avg
 from django.http import HttpResponse
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
@@ -498,3 +498,36 @@ def guardarCalificacion(request):
             "msg": ""
         }
         return HttpResponse(json.dumps(response))
+    
+def monstrarTop(request):
+    if request.method == "GET":
+        peliculas_calificaciones_promedio = list(
+            Pelicula_Usuario.objects.values
+            (
+                'pelicula__id',
+                "pelicula__title",
+                "pelicula__year",
+                "pelicula__href",
+                "pelicula__extract",
+                "pelicula__thumbnail",
+                "pelicula__path"
+            )
+            .annotate(calificacion=Avg('calificacion'))
+            .order_by('-calificacion')
+            )
+        genresPelis = list(Pelicula_Genero.objects.all().values("pelicula__id", "genero__name"))
+        top = [
+            {
+                "id": pelicula['pelicula__id'],
+                "title": pelicula['pelicula__title'],
+                "year": pelicula['pelicula__year'],
+                "href": pelicula['pelicula__href'],
+                "extract": pelicula['pelicula__extract'],
+                "thumbnail": pelicula['pelicula__thumbnail'],
+                "path": pelicula['pelicula__path'],
+                "genres": [genero['genero__name'] for genero in genresPelis if genero['pelicula__id'] == pelicula['pelicula__id'] ],
+                "calificacion":pelicula['calificacion']
+            }
+            for pelicula in peliculas_calificaciones_promedio
+        ]
+        return HttpResponse(json.dumps(top))

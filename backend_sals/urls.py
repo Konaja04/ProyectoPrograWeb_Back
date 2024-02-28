@@ -22,7 +22,8 @@ urlpatterns = [
     path('enviarCorreoRecuperacion', enviarCorreoRecuperacion),
     path('cambiarPassword', cambiarContraseña),
     path('cartelera', cartelera),
-    path('guardarCalificacion', guardarCalificacion)
+    path('guardarCalificacion', guardarCalificacion),
+    path('monstrarTop', monstrarTop)
 
 
 ]
