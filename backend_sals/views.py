@@ -491,7 +491,7 @@ def guardarCalificacion(request):
         calificacionesData = json.loads(data)
         pelicula = Pelicula.objects.get(pk = calificacionesData['pelicula_id'])
         usuario = User.objects.get(pk = calificacionesData['usuario_id'])
-        calificacion = reservaData['calificacion']        
+        calificacion = calificacionesData['calificacion']        
         nuevaCalificacion = Pelicula_Usuario(usuario = usuario, pelicula = pelicula, calificacion = calificacion)
         nuevaCalificacion.save()
         response  = {
