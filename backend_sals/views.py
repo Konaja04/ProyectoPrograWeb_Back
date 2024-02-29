@@ -20,23 +20,12 @@ def verPeliculas(request):
     if request.method == 'GET':
         peliculas = Pelicula.objects.all()
 
-        genresPelis = list(Pelicula_Genero.objects.all().values())
-        # print(genresPelis)
-        genres =  list(Genero.objects.all().values())
-
-        generosTranformado = [
-            {
-                "pelicula_id": genero['pelicula_id'],
-                "genero_name": [
-                    genre['name']
-                    for genre in genres 
-                    if genre['id'] == genero['genero_id']
-                    ][0]
-            }
-            for genero in genresPelis]
+        genresPelis = list(Pelicula_Genero.objects.all().values('pelicula__id','genero__name'))
+        castPelis = list(Pelicula_Actor.objects.all().values('pelicula__id','actor__name'))
 
         for pelicula in peliculas:
-            generos = [genero['genero_name'] for genero in generosTranformado if genero['pelicula_id'] == pelicula.id ]
+            generos = [genero['genero__name'] for genero in genresPelis if genero['pelicula__id'] == pelicula.id ]
+            actores = [actor['actor__name'] for actor in castPelis if actor['pelicula__id'] == pelicula.id ]
             data = {
             "title" : pelicula.title,
             "year" : pelicula.year,
@@ -46,7 +35,7 @@ def verPeliculas(request):
             "thumbnail_width": pelicula.thumbnail_width,
             "thumbnail_height": pelicula.thumbnail_width,
             "path": pelicula.path,
-            "cast": [],
+            "cast": actores,
             "genres": generos
             }
             response.append(data)
@@ -314,7 +303,6 @@ def registrarUsuario(request):
         if userDict["img"] == "":
             userDict["img"] = "https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
     
-        # insert user
         user = User(
             names=userDict["names"],
             last_names=userDict["last_names"],
@@ -323,11 +311,16 @@ def registrarUsuario(request):
             password=userDict["password"],
             img=userDict["img"]
         )
-        user.save()
-
-        respDict = {
-            "msg" : ""
-        }
+        try:
+            user.save()
+            respDict = {
+                "msg" : ""
+            }
+        except:
+            respDict = {
+                "error" : "Ya existe una cuenta registrada o hubo un error en el registro."
+            }
+            
         return HttpResponse(json.dumps(respDict))
 
 
@@ -340,6 +333,14 @@ def enviarCorreoRecuperacion(request):
         usuario = 'KONAHA'
         asunto = 'RECUPERACIÓN DE CUENTA'
         destinatarios = [userData['correo']]
+
+        try:
+            validarUsuario = User.objects.get(email = userData['correo'])
+        except:
+            respuesta = {
+                "msg" : "error correo"
+            }
+            return HttpResponse(json.dumps(respuesta))
         
         codigo = ''.join(secrets.choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(5))
         codigo_codificado = base64.urlsafe_b64encode(codigo.encode()).decode()
@@ -366,7 +367,6 @@ def enviarCorreoRecuperacion(request):
                 return HttpResponse(json.dumps(respuesta))
 
         except:
-            print("no envie nada xd")
             respuesta = {
                 "msg" : "Error en el envio de correo"
             }
@@ -520,7 +520,7 @@ def monstrarTop(request):
                 "pelicula__path"
             )
             .annotate(calificacion=Avg('calificacion'))
-            .order_by('-calificacion')
+            .order_by('-calificacion')[:10]
             )
         genresPelis = list(Pelicula_Genero.objects.all().values("pelicula__id", "genero__name"))
         top = [
@@ -533,7 +533,7 @@ def monstrarTop(request):
                 "thumbnail": pelicula['pelicula__thumbnail'],
                 "path": pelicula['pelicula__path'],
                 "genres": [genero['genero__name'] for genero in genresPelis if genero['pelicula__id'] == pelicula['pelicula__id'] ],
-                "calificacion":pelicula['calificacion']
+                "calificacion": round(pelicula['calificacion'],1)
             }
             for pelicula in peliculas_calificaciones_promedio
         ]
@@ -699,7 +699,7 @@ def getRecomendaciones(request, user_id):
                         "thumbnail_height": pelicula.thumbnail_height,
                         "path": pelicula.path,
                         "path": pelicula.path,
-                        "puntuacion": puntuacion
+                        "puntuacion": round(puntuacion,2)
             }
             if (puntuacion > 0):
                 recomendaciones.append(data)
@@ -777,7 +777,7 @@ def calificacionPelicula(request):
 
         pelicula_id = data['pelicula_id']
         pelicula_calificaciones_promedio = Pelicula_Usuario.objects.filter(pelicula_id=pelicula_id).aggregate(calificacion=Avg('calificacion'))
-
+        pelicula_calificaciones_promedio['calificacion'] = round(pelicula_calificaciones_promedio['calificacion'], 1) if pelicula_calificaciones_promedio['calificacion'] is not None else None
         return HttpResponse(json.dumps(pelicula_calificaciones_promedio))
         
 
