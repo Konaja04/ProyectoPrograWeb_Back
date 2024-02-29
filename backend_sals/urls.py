@@ -27,7 +27,8 @@ urlpatterns = [
     path('definirPreferenciasUsuario', definirPreferenciasUsuario),
     path('getRecomendaciones/<int:user_id>', getRecomendaciones),
     path('getCalificacion/<int:pelicula_id>/<int:user_id>', obtener_calificacion_por_user),
-    path('calificacionesUsuario', calificacionesUsuario)
+    path('calificacionesUsuario', calificacionesUsuario),
+    path('cambiar-contrasena-perfil', cambiarContrasenaPerfil)
 
 
 ]
