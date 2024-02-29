@@ -713,3 +713,18 @@ def getRecomendaciones(request, user_id):
                 break
             conta += 1
         return HttpResponse(json.dumps(response))
+
+
+def calificacionesUsuario(request):
+    if request.method == ("POST"):
+        data = request.body
+        user_id = json.load(data)['user_id']
+        usuarioCalificaciones = list(Pelicula_Usuario.objects.filter(usuario_id = user_id).values(
+            'pelicula__title',
+            'pelicula__year',
+            'pelicula__thumbnail',
+            'pelicula__path',
+            'calificacion'
+            ))
+        
+        return HttpResponse(json.dumps(usuarioCalificaciones))
