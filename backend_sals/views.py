@@ -728,9 +728,6 @@ def calificacionesUsuario(request):
             ))
         
         return HttpResponse(json.dumps(usuarioCalificaciones))
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
 
 @csrf_exempt
 def cambiarContrasenaPerfil(request):
