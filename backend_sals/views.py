@@ -714,20 +714,29 @@ def getRecomendaciones(request, user_id):
             conta += 1
         return HttpResponse(json.dumps(response))
 
-
+@csrf_exempt
 def calificacionesUsuario(request):
-    if request.method == ("POST"):
+    if request.method == "POST":
         data = request.body
-        user_id = json.load(data)['user_id']
+        user_id = json.loads(data)['user_id']
+        genresPelis = list(Pelicula_Genero.objects.all().values('pelicula__id', 'genero__name'))
         usuarioCalificaciones = list(Pelicula_Usuario.objects.filter(usuario_id = user_id).values(
+            'pelicula__id',
             'pelicula__title',
             'pelicula__year',
             'pelicula__thumbnail',
             'pelicula__path',
             'calificacion'
-            ))
-        
-        return HttpResponse(json.dumps(usuarioCalificaciones))
+            ).order_by('-calificacion'))
+        transformado  = [{
+            "title":pelicula['pelicula__title'],
+            "year":pelicula['pelicula__year'],
+            "thumbnail": pelicula['pelicula__thumbnail'],
+            "path": pelicula['pelicula__path'],
+            'genres': [genero['genero__name'] for genero in genresPelis if genero['pelicula__id'] == pelicula['pelicula__id']],
+            "calificacion":pelicula['calificacion']
+        }for pelicula in usuarioCalificaciones]
+        return HttpResponse(json.dumps(transformado))
 
 @csrf_exempt
 def cambiarContrasenaPerfil(request):
@@ -762,5 +771,16 @@ def cambiarContrasenaPerfil(request):
 
 
 
+@csrf_exempt
+def calificacionPelicula(request):
+    if request.method == 'GET':
+        body = request.body
+        data = json.loads(body)
+
+        pelicula_id = data['pelicula_id']
+        pelicula_calificaciones_promedio = Pelicula_Usuario.objects.filter(pelicula_id=pelicula_id).aggregate(calificacion=Avg('calificacion'))
+
+        return HttpResponse(json.dumps(pelicula_calificaciones_promedio))
+        
 
 
