@@ -769,11 +769,9 @@ def cambiarContrasenaPerfil(request):
         return HttpResponse(json.dumps({"msg": "Contraseña cambiada exitosamente"}))
 
 
-
-
 @csrf_exempt
 def calificacionPelicula(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         body = request.body
         data = json.loads(body)
 
