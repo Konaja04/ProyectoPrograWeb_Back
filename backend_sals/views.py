@@ -489,15 +489,22 @@ def guardarCalificacion(request):
     if request.method == "POST":
         data = request.body
         calificacionesData = json.loads(data)
-        pelicula = Pelicula.objects.get(pk = calificacionesData['pelicula_id'])
-        usuario = User.objects.get(pk = calificacionesData['usuario_id'])
-        calificacion = calificacionesData['calificacion']        
-        nuevaCalificacion = Pelicula_Usuario(usuario = usuario, pelicula = pelicula, calificacion = calificacion)
+        nuevaCalificacion = Pelicula_Usuario(
+            usuario_id = calificacionesData['usuario_id'], 
+            pelicula_id = calificacionesData['pelicula_id'], 
+            calificacion = calificacionesData['calificacion']  
+            )
         nuevaCalificacion.save()
         response  = {
             "msg": ""
         }
+        definirPreferenciasUsuario(calificacionesData['usuario_id'])
         return HttpResponse(json.dumps(response))
+
+def obtener_calificacion_por_user(request, pelicula_id, user_id):
+    if request.method == 'GET':
+        calificacion = Pelicula_Usuario.objects.filter(pelicula_id=pelicula_id, usuario__id=user_id).values() 
+        return HttpResponse(json.dumps(list(calificacion)))
     
 def monstrarTop(request):
     if request.method == "GET":
@@ -533,7 +540,6 @@ def monstrarTop(request):
         return HttpResponse(json.dumps(top))
 
 def definirPreferenciasUsuario(user_id):
-        user_id = 4
         Usuario_Keyword.objects.filter(usuario_id=user_id).delete()
         Usuario_Genero.objects.filter(usuario_id=user_id).delete()
         Usuario_Actor.objects.filter(usuario_id=user_id).delete()
@@ -651,9 +657,6 @@ def definirPreferenciasUsuario(user_id):
                 peso = preferencia['peso']/total
             )
             nuevaPreferencia.save()
-
-        return HttpResponse(json.dumps(calificacionesTransformado))
-
 
 
 def getRecomendaciones(request, user_id):

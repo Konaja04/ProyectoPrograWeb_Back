@@ -40,7 +40,7 @@ class SalaAdmin(admin.ModelAdmin):
 class SalaFormatoAdmin(admin.ModelAdmin):
     list_display = ['sala', 'formato']
 class PeliculaUsuarioAdmin(admin.ModelAdmin):
-    list_display = ['pelicula', 'usuario']
+    list_display = ['pelicula', 'usuario','calificacion']
 
 class FuncionAdmin(admin.ModelAdmin):
     list_display = ['pelicula', 'sala', 'ventana']
