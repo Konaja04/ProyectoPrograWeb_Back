@@ -713,3 +713,43 @@ def getRecomendaciones(request, user_id):
                 break
             conta += 1
         return HttpResponse(json.dumps(response))
+
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def cambiarContrasenaPerfil(request):
+    if request.method == "POST":
+        data = request.body
+        userData = json.loads(data)
+
+        # Sacar id de sessionStorage
+        id_usuario = userData["user_id"]
+
+        # Verificar si id ta en la sesion
+        if id_usuario is None:
+            return HttpResponse(json.dumps({"error": "ID de usuario no proporcionado"}), status=400)
+
+        # obtener el usuario de la base de datos
+        try:
+            usuario = User.objects.get(id=id_usuario)
+        except User.DoesNotExist:
+            return HttpResponse(json.dumps({"error": "Usuario no encontrado"}), status=404)
+
+        # Verificar si contraseña ta en base de datos
+        if userData.get("password") != usuario.password:
+            return HttpResponse(json.dumps({"error": "Contraseña actual incorrecta"}), status=400)
+
+        # Cambiar contraseña
+        nueva_password = userData.get("nueva_password")
+        usuario.password = nueva_password
+        usuario.save()
+
+        return HttpResponse(json.dumps({"msg": "Contraseña cambiada exitosamente"}))
+
+
+
+
+
+
