@@ -1,2 +1,5 @@
-USER_MAIL = "20211918@aloe.ulima.edu.pe"
-PASSWORD = "vkve rplr rjph nqbe"
+import os
+
+
+USER_MAIL = os.environ.get('USER_MAIL')
+PASSWORD = os.environ.get('PASSWORD')

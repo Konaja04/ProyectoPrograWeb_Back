@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-+2%0dj$y@c&-5$_11)p_&-c9_3l@rcctz9bv!6^s)c()id94%p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+'backend-salas-ulima-20211628.azurewebsites.net']
 
 
 # Application definition
@@ -54,6 +55,7 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://konaja04.github.io/ProyectoPrograWeb_Front',
     'http://salas-cines-database-konaja.postgres.database.azure.com'
 ]
 ROOT_URLCONF = 'backend.urls'

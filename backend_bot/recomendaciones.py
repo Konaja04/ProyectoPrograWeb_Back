@@ -43,6 +43,6 @@ def recomendaciones(preferencias):
     
     recomendaciones_ordenadas = sorted(recomendaciones_filtradas, key=lambda x: x.puntuacion, reverse=True)
     
-    data = [{"pelicula":pelicula.pelicula, "url": ("http://localhost:3000/pelicula/{}").format(pelicula.pelicula['path'])} for pelicula in recomendaciones_ordenadas[:5]]
+    data = [{"pelicula":pelicula.pelicula, "url": ("https://konaja04.github.io/ProyectoPrograWeb_Front/#/pelicula/{}").format(pelicula.pelicula['path'])} for pelicula in recomendaciones_ordenadas[:5]]
 
     return data
